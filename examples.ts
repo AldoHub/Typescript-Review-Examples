@@ -72,6 +72,95 @@ const consumableDictionary: Dictionary<IConsumable> = {
     3 : {name: 'elixir', amount: 2},
 }
 
+//--- Enums Example
+
+//using keyof typeof to emulate a enum
+const direction = {
+    up: 'UP',
+    right: 'RIGHT',
+    down: 'DOWN',
+    left: 'LEFT'
+}
+
+//Craete a type infer from the object directions
+type Direction = keyof typeof direction;
+
+//using the new Direction type we can use the typing in order to access the values
+function moveObject(direction: Direction){
+    console.log(direction);
+}
+
+//usage of the function, will prompt the correct values from the Direction type that are permited on the parameters
+moveObject('up')
+
+
+//creating the ENUM
+enum eDirection{
+    up = 'UP',
+    right = 'RIGHT',
+    down = 'DOWN',
+    left = 'LEFT'
+}
+
+//create a new function that accepts eDirection as a type
+function moveObjectWithEnum(direction: eDirection){
+    console.log(direction);
+}
+
+//now use the enum to access the properties inside
+moveObjectWithEnum(eDirection.down)
+
+
+//--- Decorators Example
+
+//decorator code
+function requiredExperience(){
+    return function(
+        target: any, 
+        propertyKey: string,
+        descriptor: PropertyDescriptor
+    ){
+        //the original method
+        const originalMethod = descriptor.value;
+
+        //overwrite the method
+        descriptor.value = function(...args:any[]){
+            //if check passes
+            if(this.experience > this.experienceThreshold){
+                //use original method
+                originalMethod.apply(this, args);
+            }
+            else{
+                //otherwise, do something else
+                console.log(`${this.name} has not enough XP to evolve`);
+            }
+        }
+
+        return descriptor;
+
+    }
+}
+
+
+class Pokemon {
+    constructor(
+        private name: string,
+        private experience: number,
+        private evolution: string,
+        private experienceThreshold: number,
+    ){}
+    
+
+    //use decorator
+    @requiredExperience()
+    evolve(){
+        console.log(`${this.name} evolved to ${this.evolution}`);
+    }
+}
+
+const pikachu = new Pokemon('Pikachu', 80, 'Raichu', 120);
+pikachu.evolve();
+
 
 //--- etc
 
