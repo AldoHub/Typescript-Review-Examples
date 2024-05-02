@@ -142,7 +142,7 @@ function requiredExperience(){
 }
 
 
-class Pokemon {
+class CPokemon {
     constructor(
         private name: string,
         private experience: number,
@@ -158,8 +158,41 @@ class Pokemon {
     }
 }
 
-const pikachu = new Pokemon('Pikachu', 80, 'Raichu', 120);
+const pikachu = new CPokemon('Pikachu', 80, 'Raichu', 120);
 pikachu.evolve();
+
+
+
+//--- Function overloads
+
+// is the ability to create multiple functions of the same name with different implementations.
+// which implementation gets used depends on the arguments passed
+
+interface oPokemon {
+    name: string,
+    hp: number
+}
+
+
+function oLogPokemon(name:string, hp:number): void;
+function oLogPokemon(pokemonObject: oPokemon): void;
+
+
+function oLogPokemon(arg1: unknown, arg2?: unknown): void {
+    if(typeof arg1 === 'string' && typeof arg2 === 'number'){
+        console.log(`${arg1} has ${arg2} HP`);
+    }
+
+    if(typeof arg1 === 'object'){
+        const {name, hp} = arg1 as oPokemon;
+        console.log(`${name} has ${hp} HP`);
+    }
+
+}
+
+oLogPokemon("Pikachu" , 35);
+oLogPokemon({name: "Pikachu", hp: 35});
+
 
 
 //--- etc
