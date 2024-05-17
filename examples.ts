@@ -56,6 +56,25 @@ interface IConsumable{
 }
 
 
+
+//--- generics Example 3
+interface DB {
+    connection: string,
+    username: string,
+    password: string
+}
+
+function genericTypeFunction<T, U extends DB>(arg1: T, arg2: U): object {
+    
+    return{
+        arg1, 
+        arg2
+    }
+}
+
+
+genericTypeFunction("typescript", {connection: "connection_string", username: "db_user", password: "db_pass"});
+
 //we set now the real type we wnt to use, instead of the placeholder/ generic type
 
 //add the type as IPokemon
@@ -195,9 +214,73 @@ oLogPokemon({name: "Pikachu", hp: 35});
 
 
 
-//--- etc
+//--- "Never" as a return type
 
-let user = {name: 'user1', age: 30}
+//Never type represents values whic are never observed. In a return type, this means that the function throws
+//an exception or terminates execution of the program
 
-console.log('hey');
-console.log(user.email); //Min27:27
+function fail(msg: string): never{
+    throw new Error(msg);
+} 
+
+
+//define some types
+type cardNumber = {
+    card_number: string
+}
+
+type cardDate = {
+    card_date: string
+}
+
+
+//create a new type that englobes the other type props with a new cvv one
+type cardDetails = cardNumber & cardDate & {
+    cvv: number
+}
+
+//Usage
+let details: cardDetails = {
+    card_number: "dadad",
+    card_date: "faffa",
+    cvv: 12234
+} 
+
+
+//arrays with different types
+const dataArray: (string | number)[] = [1, "2"];
+
+//specific values
+let seatAllotment: "aisle" | "middle" | "window";
+//typescript will show the possible values for the variable
+seatAllotment = "aisle";
+
+
+//---tuple -- an array with specific order inside it
+let tUser: [string, number, boolean];
+tUser = ["1", 2, true];
+
+
+//--- IN operator
+
+//check if theres a property existing in a certain case
+interface xUser {
+    name: string,
+    email: string
+}
+
+interface xAdmin {
+    name: string,
+    email: string,
+    isAdmin: boolean
+}
+
+//check if the user passed is an admin
+function isUserAdmin(user: xUser | xAdmin){
+    //if the property exists in the argument passed
+    if("isAdmin" in user){
+        console.log("User is an Admin: ", user.isAdmin);
+    }
+
+}
+
